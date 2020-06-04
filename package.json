@@ -1,0 +1,27 @@
+{
+  "name": "prm-static",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "global": "^4.4.0",
+    "gridsome": "^0.7.0",
+    "gridsome-plugin-pwa": "0.0.12",
+    "gridsome-source-google-sheets": "^0.3.1",
+    "js-sha1": "^0.6.0",
+    "lottie-vuejs": "0.3.6",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "serve": "^11.3.0",
+    "vue-gtag": "^1.6.2",
+    "vuetify": "^2.2.22"
+  },
+  "devDependencies": {
+    "gridsome-plugin-manifest": "^0.3.4",
+    "gridsome-plugin-service-worker": "^0.1.4"
+  }
+}

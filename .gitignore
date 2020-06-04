@@ -1,0 +1,14 @@
+*.log
+.cache
+.DS_Store
+src/.temp
+node_modules
+dist
+.env
+.env.*
+
+# Local Netlify folder
+.netlify
+
+__pycache__
+.pytest_cache
