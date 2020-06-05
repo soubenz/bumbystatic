@@ -1,22 +1,20 @@
 <template>
   <v-app>
-    <v-app-bar app :color="$page.users.appBarColor">
+    <v-app-bar app>
       <v-spacer />
-      <span class="title ml-3 mr-5">{{$page.users.name}}</span>
       <v-spacer />
     </v-app-bar>
     <v-content>
       <v-container class="ma-0 pa-0" fluid>
+        <v-card active-class="class" color="pink lighten-5" raised height="200">xcxc</v-card>
         <v-row class="ma-0 pa-0" justify="center">
-          <v-col cols="12" sm="8" md="5">
-            <v-card class="elevation-12" shaped>
-              <slot />
-            </v-card>
+          <v-col cols="12" sm="9" md="7">
+            <slot />
           </v-col>
         </v-row>
       </v-container>
     </v-content>
-    <default-footer v-if="$page.paid"></default-footer>
+    <!-- <default-footer v-if="$page.paid"></default-footer> -->
   </v-app>
 </template>
 
@@ -28,6 +26,11 @@ export default {
     pageTitle: String
   },
   data: () => ({
+    tab: null,
+    items: ["Pending", "In progress", "Completed"],
+    text:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+
     drawer: null
   }),
   methods: {}
