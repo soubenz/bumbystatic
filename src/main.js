@@ -8,6 +8,7 @@ import 'vuetify/dist/vuetify.min.css'
 import SequentialEntrance from 'vue-sequential-entrance'
 import 'vue-sequential-entrance/vue-sequential-entrance.css'
 import VueGtag from "vue-gtag";
+import Vuex from 'vuex'
 
 export default function (Vue, {
   appOptions,
@@ -41,5 +42,32 @@ export default function (Vue, {
   // Set default layout as a global component
   Vue.component('Layout', DefaultLayout)
 
+
   appOptions.vuetify = new Vuetify(opts);
+  Vue.use(Vuex);
+  appOptions.store = new Vuex.Store({
+    state: {
+      voted: [],
+      features: [],
+      pending: []
+    },
+    getters: {
+      trendingFeatures: state => {
+        return state.features
+      },
+      votedFeatures: state => {
+        return state.voted
+      }
+    },
+    mutations: {
+      vote(state, id) {
+        state.voted.push({
+          id
+        });
+      },
+      setFeatures(state, features) {
+        Vue.set(state, 'features', features)
+      }
+    }
+  });
 }
