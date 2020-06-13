@@ -1,23 +1,28 @@
 <template>
   <v-tab-item>
-    <v-card v-for="item in pending" :key="item.id" class="my-6" id="rounded-card" raised>
+    <!-- {{features}} -->
+    <v-card v-for="item in items" :key="item._id" class="my-6" id="rounded-card" raised>
       <v-row dense justify="center">
         <v-col
           cols="12"
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
         >
-          <v-btn class="mx-2" text icon color="blue lighten-2">
+          <v-snackbar v-model="snackbarVote">
+            Your vote has been saved
+            <v-btn color="pink" text @click="snackbarVote = false">Close</v-btn>
+          </v-snackbar>
+          <v-btn class="mx-2" text icon color="blue lighten-2" @click="vote(item)">
             <v-icon>mdi-thumb-up</v-icon>
           </v-btn>
           <span class="d-inline justify-center mx-2 px-2 font-weight-bold" v-text="item.votes"></span>
-          <v-btn class="mx-2" text icon color="red lighten-2">
-            <v-icon>mdi-thumb-down</v-icon>
+          <v-btn class="mx-2" text icon color="blue lighten-2" @click="snackbarVote = true">
+            <v-icon>mdi-comment-multiple-outline</v-icon>
           </v-btn>
         </v-col>
         <v-col cols="12" sm="10">
-          <v-card-title primary-title>{{ item.text }}</v-card-title>
-          <v-card-text class="hidden-sm-and-down">{{ item.desc }}</v-card-text>
+          <v-card-title primary-title>{{ item.title }}</v-card-title>
+          <v-card-text class="hidden-sm-and-down">{{ item.description }}</v-card-text>
           <v-card-actions>
             <template v-for="(tag, i) in item.tags">
               <v-chip :key="i" class="hidden-sm-and-down mx-1" :color="getTagInfo(tag).color">
@@ -32,19 +37,24 @@
             </template>
           </v-card-actions>
         </v-col>
-        <v-col
+        <!-- <v-col
           cols="12"
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
         >
-          <v-btn class="mx-2" text icon color="blue lighten-2">
+          <v-snackbar v-model="snackbarVote">
+            Your vote has been saved
+            <v-btn color="pink" text @click="snackbarVote = false">Close</v-btn>
+          </v-snackbar>
+
+          <v-btn class="mx-2" text icon color="blue lighten-2" @click="snackbarVote = true">
             <v-icon>mdi-comment-plus-outline</v-icon>
           </v-btn>
           <span class="d-inline justify-center mx-2 px-2 font-weight-bold">23</span>
           <v-btn class="mx-2" text icon color="blue lighten-2">
             <v-icon>mdi-comment-multiple-outline</v-icon>
           </v-btn>
-        </v-col>
+        </v-col>-->
       </v-row>
     </v-card>
   </v-tab-item>
@@ -54,6 +64,8 @@
 export default {
   data() {
     return {
+      snackbarVote: false,
+      //   snackbarVoteDown: false,
       pending: [
         {
           id: 1,
@@ -126,13 +138,25 @@ export default {
           dark: true
         }
       }
+      // features: this.items
     };
   },
+  props: {
+    items: { type: Array, required: true }
+  },
+  // async mounted() {
+  //   this.$store.commit("setPending", pending);
+  // },
+
   methods: {
     getTagInfo(tag) {
-      console.log(tag);
-      console.log(this.icons.enhancement);
+      // console.log(tag);
+      // console.log(this.icons.enhancement);
       return this.icons[tag.toLowerCase()];
+    },
+    vote(id) {
+      this.$store.commit("vote", id);
+      this.snackbarVote = true;
     }
   }
 };
