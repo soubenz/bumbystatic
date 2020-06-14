@@ -1,0 +1,22 @@
+type Comment {
+text: String!
+user: String!
+feature: Feature
+}
+
+type Feature {
+ 
+ title: String!
+ votes: Int!
+ description: String
+ comments: [Comment] @relation
+ tags: [String]
+ planned: Boolean
+ completed: Boolean
+ wouldPay: Boolean
+ userID: String!
+}
+
+type Query {
+ allFeatures: [Feature!]!
+}
