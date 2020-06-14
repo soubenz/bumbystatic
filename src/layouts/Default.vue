@@ -4,16 +4,15 @@
       <v-spacer />
       <v-spacer />
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container class="ma-0 pa-0" fluid>
-        <v-card active-class="class" color="pink lighten-5" raised height="200">xcxc</v-card>
         <v-row class="ma-0 pa-0" justify="center">
           <v-col cols="12" sm="9" md="7">
             <slot />
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
     <!-- <default-footer v-if="$page.paid"></default-footer> -->
   </v-app>
 </template>
