@@ -79,9 +79,9 @@ export default function (Vue, {
       }
     },
     mutations: {
-      vote(state, id) {
-        const index = state.features.indexOf(item);
-        Vue.set(state.features[index], 'voted', true)
+      vote(state, payload) {
+        const index = state.features.indexOf(payload.item);
+        Vue.set(state.features[index], 'voted', payload.status)
         // state.features = [...state.features, feature];
         // state.voted.push({
         //   id

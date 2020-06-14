@@ -8,12 +8,14 @@
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
         >
-          <v-snackbar v-model="snackbarVote">
-            Your vote has been saved
-            <v-btn color="pink" text @click="snackbarVote = false">Close</v-btn>
-          </v-snackbar>
-          <v-btn class="mx-2" text icon color="blue lighten-2" @click="vote(item)">
-            <v-icon>mdi-thumb-up</v-icon>
+          <v-btn
+            class="ma-1 px-2 d-flex justify-space-around"
+            :outlined="!item.voted"
+            color="blue lighten-2"
+            @click="vote(item, !item.voted)"
+          >
+            <v-icon class>mdi-arrow-up-drop-circle-outline</v-icon>
+            <span class="d-inline justify-center font-weight-bold" v-text="item.votes"></span>
           </v-btn>
           <span class="d-inline justify-center mx-2 px-2 font-weight-bold" v-text="item.votes"></span>
           <v-btn class="mx-2" text icon color="blue lighten-2" @click="snackbarVote = true">
@@ -154,9 +156,10 @@ export default {
       // console.log(this.icons.enhancement);
       return this.icons[tag.toLowerCase()];
     },
-    vote(id) {
-      this.$store.commit("vote", id);
+    vote(item, status) {
+      this.$store.commit("vote", { item: item, status: status });
       this.snackbarVote = true;
+    },
     }
   }
 };
