@@ -20,6 +20,8 @@
     "vue-gtag": "^1.6.2",
     "vuetify": "^2.2.22"
     "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "gridsome-plugin-manifest": "^0.3.4",

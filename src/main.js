@@ -9,6 +9,8 @@ import SequentialEntrance from 'vue-sequential-entrance'
 import 'vue-sequential-entrance/vue-sequential-entrance.css'
 import VueGtag from "vue-gtag";
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist';
+// import VueScroller from 'vue-scroller'
 
 export default function (Vue, {
   appOptions,
@@ -27,6 +29,7 @@ export default function (Vue, {
   })
   Vue.use(LottieAnimation);
   Vue.use(SequentialEntrance);
+  // Vue.use(VueScroller)
   Vue.use(VueGtag, {
     config: {
       id: "UA-163710881-1",
@@ -44,30 +47,54 @@ export default function (Vue, {
 
 
   appOptions.vuetify = new Vuetify(opts);
+
+  appOptions.vuexLocalStorage = new VuexPersist({
+    key: 'vuex', // The key to store the state on in the storage provider.
+    storage: window.localStorage, // or window.sessionStorage or localForage
+    // Function that passes the state and returns the state with only the objects you want to store.
+    // reducer: state => state,
+    // Function that passes a mutation and lets you decide if it should update the state in localStorage.
+    // filter: mutation => (true)
+  })
   Vue.use(Vuex);
+
   appOptions.store = new Vuex.Store({
+    plugins: [appOptions.vuexLocalStorage.plugin],
     state: {
       voted: [],
       features: [],
       pending: []
     },
     getters: {
-      trendingFeatures: state => {
+      features: state => {
+        state.features.sort((a, b) => (a._ts > b._ts ? -1 : 1));
         return state.features
       },
-      votedFeatures: state => {
-        return state.voted
+      plannedFeatures: state => {
+        return state.features.filter(
+          feature => {
+            return feature.planned == true
+          }
+        )
       }
     },
     mutations: {
       vote(state, id) {
-        state.voted.push({
-          id
-        });
+        const index = state.features.indexOf(item);
+        Vue.set(state.features[index], 'voted', true)
+        // state.features = [...state.features, feature];
+        // state.voted.push({
+        //   id
+        // });
       },
       setFeatures(state, features) {
         Vue.set(state, 'features', features)
       }
+    },
+    addFeatures(state, feature) {
+      state.features = [...state.features, feature];
+      // state.features.push(feature)
     }
+
   });
 }
