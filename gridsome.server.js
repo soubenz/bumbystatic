@@ -17,27 +17,47 @@ const path = require('path');
 module.exports = function (api) {
 
   api.loadSource(async actions => {
+
+    let query = `query findAllUser {
+      allUsers {
+      data {   _id
+        username
+        announcement
+        companyName
+        companyWebsite
+    }  
+      
+      }
+    }
+     `
     const {
       data
-    } = await axios.get(process.env.DATA_API_URL + '/layouts?username=' + process.env.DATA_USER)
+    } = await axios.post("https://graphql.fauna.com/graphql", {
+      query: query
+    }, {
+      headers: {
+        Authorization: "Basic Zm5BRHRxUnA1MkFDRTBrMzlmWkVTMnR4bXNHZ2JScEVVUGRvZ1d4WjpidW1ieTpzZXJ2ZXI="
+      }
+    })
 
-    const layouts = actions.addCollection('Users')
+
+    console.log(data)
+    const layouts = actions.addCollection('User')
     // layouts.addReference('layouts', 'Layout')
-    layouts.addNode({
-      id: data.name,
-      name: data.name,
-      layout: data.layout,
-      appBarColor: data.app_bar_color,
-      bio: data.bio,
-      paid: data.paid
+    data.data.allUsers.data.forEach(user => {
+      layouts.addNode({
+        id: user.username,
+        companyName: user.companyName,
+        companyWebsite: user.companyWebsite,
+        announcement: user.announcement
+        // id: quote.image.slice(-25, -5),
+        //  image: path.resolve(quote.image),
+        //  id: quote.text.slice(0, 30),
+        //  character: quote.character,
+        //  series: actions.store.createReference(tvseries),
+        //  text: quote.text
 
-      // id: quote.image.slice(-25, -5),
-      //  image: path.resolve(quote.image),
-      //  id: quote.text.slice(0, 30),
-      //  character: quote.character,
-      //  series: actions.store.createReference(tvseries),
-      //  text: quote.text
-
+      })
     })
   })
 }

@@ -39,7 +39,7 @@ module.exports = {
     // Influencers: '/influencer/:username',
     // Blogs: '/blog/:username',
     // Quotes: '/quotes/:id',
-    Users: '/',
+    User: '/:id',
     // Links2: '/2/:id',
     // Links3: '/3/:id',
     // Links4: '/4/:id',
