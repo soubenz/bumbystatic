@@ -2,7 +2,7 @@
   <layout>
     <v-card active-class="class" color="pink lighten-5" raised height="200">
       <v-card-title>
-        <v-row justify="center">{{this.$page.user.companyName}}</v-row>
+        <v-row justify="center">{{ this.$page.user.companyName }}</v-row>
       </v-card-title>
       <v-card-text>
         <!-- <v-row justify="center">
@@ -14,16 +14,53 @@
           ></v-img>
         </v-row>
         <v-row justify="center">
-          <v-btn text color="primary" :href="$page.user.companyWebsite">Company's Website</v-btn>
+          <v-btn text color="primary" :href="$page.user.companyWebsite"
+            >Company's Website</v-btn
+          >
         </v-row>
+        <v-dialog v-model="announcementDialog" width="500">
+          <v-card>
+            <!-- <v-card-title class="headline grey lighten-2"></v-card-title> -->
+            <v-card-text>
+              <!-- <v-btn color="primary" text @click="createFeature()"
+                >Add New</v-btn
+              > -->
+              <span>created at </span>
+              <!-- <v-text-field v-model="addingItem.title" label="Title" required></v-text-field>
+          <v-text-field
+            v-model="addingItem.desc"
+            label="Description"
+            hint="example of helper text only on focus"
+          ></v-text-field>
+        <v-switch v-model="addingItem.wouldPay" class="mx-2" label="Would Pay for this feature"></v-switch>-->
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-btn color="primary" text @click="announcementDialog = false"
+                >close</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="addDialog" width="500">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">Make Suggestion</v-btn>
+            <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on"
+              >Make Suggestion</v-btn
+            >
+            <p>{{ loggedinUser }}</p>
+            <!-- <p>{{ completed }}</p> -->
           </template>
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>Suggest new Feature</v-card-title>
+            <v-card-title class="headline grey lighten-2" primary-title
+              >Suggest new Feature</v-card-title
+            >
             <v-card-text>
-              <v-text-field v-model="addingItem.title" label="Title" required></v-text-field>
+              <v-text-field
+                v-model="addingItem.title"
+                label="Title"
+                required
+              ></v-text-field>
               <v-text-field
                 v-model="addingItem.desc"
                 label="Description"
@@ -38,16 +75,15 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="createFeature()">Suggest</v-btn>
+              <v-btn color="primary" text @click="createFeature()"
+                >Suggest</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <!-- </v-col> -->
-        <!-- </v-row> -->
       </v-card-text>
     </v-card>
     <v-app-bar dark fixed>
-      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
       <v-tabs
         v-model="selectedTab"
         dark
@@ -57,20 +93,17 @@
         background-color="brown"
         active-class="selected-tab"
       >
-        <v-tab v-for="(tab) in tabs" :key="tab.name">
+        <v-tab v-for="tab in tabs" :key="tab.name">
           <span class="hidden-sm-and-down">{{ tab.name }}</span>
-          <v-icon class="d-sm-none">{{tab.icon}}</v-icon>
+          <v-icon class="d-sm-none">{{ tab.icon }}</v-icon>
         </v-tab>
       </v-tabs>
     </v-app-bar>
     <v-tabs-items v-model="selectedTab">
-      <!-- {{recent}} -->
-      <!-- <features-list :items="recent" />
-      <features-list :items="$store.getters.plannedFeatures" />-->
-      <!-- <features-list /> -->
+      <features-list :items="recent" />
+      <features-list :items="planned" />
+      <features-list :items="completed" />
     </v-tabs-items>
-
-    <!-- {{$store.getters.trendingFeatures}} -->
   </layout>
 </template>
 <page-query>
@@ -96,27 +129,31 @@ export default {
       defaultItem: { title: "", desc: "", wouldPay: false },
       addDialog: false,
       trending: [],
+      completed: [],
+      planned: [],
       recent: [],
+      announcementDialog: false,
       tabs: [
         { name: "Most Recent", icon: "mdi-trending-up" },
         { name: "Planned", icon: "mdi-view-agenda-outline" },
-        { name: "Completed", icon: "mdi-check" }
-      ]
+        { name: "Completed", icon: "mdi-check" },
+      ],
     };
   },
   metaInfo() {},
   async mounted() {
-    if (this.$store.getters.features.length != 0) {
-      console.log("from vuex");
-      this.recent = this.$store.getters.features;
-    } else {
-      await this.getAllFeatures();
-    }
+    // if (this.$store.getters.features.length != 0) {
+    //   console.log("from vuex");
+    //   this.recent = this.$store.getters.features;
+    // } else {
+    await this.getAllFeatures();
+    this.announcementDialog = true;
+    // }
   },
 
   methods: {
     async getAllFeatures() {
-      console.log(this.$store.getters.features.length);
+      // console.log(this.$store.getters.features.length);
       // if (this.$store.getters.features.length != 0) {
       //   console.log("in vuex");
       // } else {
@@ -126,33 +163,36 @@ export default {
         method: "post",
         data: {
           query: `
-          query FindAllFeatures {
-          allFeatures {
-            data {
-              _id
-              title
-              description
-              user {companyName companyWebsite announcement}
-              votes { data {like wouldPay} }
-              tags
-              comments {data {text }}
-              _ts
-              planned
-              completed
-              wouldPay
-                    
-            }
+       query findUser {
+          usersByUsername(username: "${this.$page.user.id}") {
+          _id
+          _ts
+          features { data {title _id completed planned
+          description  votes {data {wouldPay like _id user  {_id}}}}}
+        }  
           }
-        }
-      `
-        }
-      }).then(result => {
+        `,
+        },
+      }).then((result) => {
         console.log(result.data);
-        let features = result.data.data.allFeatures.data;
+        let features = result.data.data.usersByUsername.features.data;
+
+        this.completed = features.filter((feature) => {
+          return feature.completed == true;
+        });
+        this.planned = features.filter((feature) => {
+          return feature.planned == true;
+        });
+        console.log(this.completed);
+        // if (this.$store.getters.user != null){
+        //   features.map( (feature) => { if(vote.user._id == this.$store.getters.user._id) {} })
+
+        // }
+
         // console.log(features);
         // features.sort((a, b) => (a._ts > b._ts ? -1 : 1));
-        this.$store.commit("setFeatures", features);
-        this.recent = this.$store.getters.features;
+        // this.$store.commit("setFeatures", features);
+        this.recent = features;
       });
       // }
     },
@@ -162,7 +202,6 @@ export default {
         method: "post",
         data: {
           query: `
-      # Write your query or mutation here
         mutation CreateAList {
           createFeature(data: {
             votes: 1, userID: "sss", title: "${this.addingItem.title}", description: "${this.addingItem.desc}", wouldPay:${this.addingItem.wouldPay}
@@ -176,9 +215,9 @@ export default {
             wouldPay
           }
         }
-        `
-        }
-      }).then(result => {
+        `,
+        },
+      }).then((result) => {
         this.addDialog = false;
 
         // Vue.set(...this.recent, "avatar", avatar);
@@ -188,16 +227,38 @@ export default {
         this.recent.push(result.data.data.createFeature);
         this.recent.sort((a, b) => (a._ts > b._ts ? -1 : 1));
         this.addingItem = this.defaultItem;
+        this.$store.commit("setFeatures", features);
+
         // this.$forceUpdate();
       });
-    }
+    },
   },
   computed: {
+    loggedinUser() {
+      const user = this.$store.getters.user;
+      if (user != null) {
+        if (!!user.email) {
+          return user.email;
+        } else {
+          return true;
+        }
+      }
+      // console.log(this.$store.getters);
+      return false;
+      // if (this.$store.getters.user != null) {
+      //   if (this.$store.getters.user.email == "") {
+      //     return "anonymous";
+      //   } else {
+      //     return $store.getters.user.email;
+      //   }
+      // }
+      // return false;
+    },
     // trending() {
     //   console.log(this.$store.getters.trending);
     //   return this.$store.getters.trending;
     // }
-  }
+  },
 };
 </script>
 
