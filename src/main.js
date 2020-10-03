@@ -52,9 +52,9 @@ export default function (Vue, {
     key: 'vuex', // The key to store the state on in the storage provider.
     storage: window.localStorage, // or window.sessionStorage or localForage
     // Function that passes the state and returns the state with only the objects you want to store.
-    // reducer: state => state,
+    reducer: state => state,
     // Function that passes a mutation and lets you decide if it should update the state in localStorage.
-    // filter: mutation => (true)
+    filter: mutation => (true)
   })
   Vue.use(Vuex);
 
@@ -63,9 +63,13 @@ export default function (Vue, {
     state: {
       voted: [],
       features: [],
-      pending: []
+      pending: [],
+      user: null
     },
     getters: {
+      user: state => {
+        return state.user
+      },
       features: state => {
         state.features.sort((a, b) => (a._ts > b._ts ? -1 : 1));
         return state.features
@@ -73,15 +77,27 @@ export default function (Vue, {
       plannedFeatures: state => {
         return state.features.filter(
           feature => {
-            return feature.planned == true
+            return feature.planned == completed
+          }
+        )
+      },
+      completedFeatures: state => {
+        return state.features.filter(
+          feature => {
+            return feature.planned == completed
           }
         )
       }
     },
     mutations: {
+      setUser(state, user) {
+        Vue.set(state, 'user', user)
+      },
       vote(state, payload) {
         const index = state.features.indexOf(payload.item);
+        let votes = [...state.features[index].votes.data, payload.vote];
         Vue.set(state.features[index], 'voted', payload.status)
+        Vue.set(state.features[index].votes, 'data', votes)
         // state.features = [...state.features, feature];
         // state.voted.push({
         //   id
@@ -94,7 +110,8 @@ export default function (Vue, {
     addFeatures(state, feature) {
       state.features = [...state.features, feature];
       // state.features.push(feature)
-    }
+    },
+    // vote
 
   });
 }
