@@ -64,11 +64,15 @@ export default function (Vue, {
       voted: [],
       features: [],
       pending: [],
-      user: null
+      user: null,
+      announcement: null
     },
     getters: {
       user: state => {
         return state.user
+      },
+      announcement: state => {
+        return state.announcement
       },
       features: state => {
         state.features.sort((a, b) => (a._ts > b._ts ? -1 : 1));
@@ -90,6 +94,9 @@ export default function (Vue, {
       }
     },
     mutations: {
+      setAnnouncement(state, announcement) {
+        Vue.set(state, 'announcement', announcement)
+      },
       setUser(state, user) {
         Vue.set(state, 'user', user)
       },

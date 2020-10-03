@@ -20,12 +20,14 @@
         </v-row>
         <v-dialog v-model="announcementDialog" width="500">
           <v-card>
-            <!-- <v-card-title class="headline grey lighten-2"></v-card-title> -->
+            <v-card-title class="headline grey lighten-2"
+              >announcement</v-card-title
+            >
             <v-card-text>
               <!-- <v-btn color="primary" text @click="createFeature()"
                 >Add New</v-btn
               > -->
-              <span>created at </span>
+              <span>{{ announcementText }} </span>
               <!-- <v-text-field v-model="addingItem.title" label="Title" required></v-text-field>
           <v-text-field
             v-model="addingItem.desc"
@@ -36,7 +38,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-              <v-btn color="primary" text @click="announcementDialog = false"
+              <v-btn color="primary" text @click="closeAnnouncement"
                 >close</v-btn
               >
               <v-spacer></v-spacer>
@@ -130,6 +132,7 @@ export default {
       addDialog: false,
       trending: [],
       completed: [],
+      announcementText: "",
       planned: [],
       recent: [],
       announcementDialog: false,
@@ -147,11 +150,17 @@ export default {
     //   this.recent = this.$store.getters.features;
     // } else {
     await this.getAllFeatures();
-    this.announcementDialog = true;
+    if (!this.$store.getters.announcement) {
+      this.announcementDialog = true;
+    }
     // }
   },
 
   methods: {
+    closeAnnouncement() {
+      this.announcementDialog = false;
+      this.$store.commit("setAnnouncement", true);
+    },
     async getAllFeatures() {
       // console.log(this.$store.getters.features.length);
       // if (this.$store.getters.features.length != 0) {
@@ -167,6 +176,7 @@ export default {
           usersByUsername(username: "${this.$page.user.id}") {
           _id
           _ts
+          announcement
           features { data {title _id completed planned
           description  votes {data {wouldPay like _id user  {_id}}}}}
         }  
@@ -183,7 +193,8 @@ export default {
         this.planned = features.filter((feature) => {
           return feature.planned == true;
         });
-        console.log(this.completed);
+        this.announcementText = result.data.data.usersByUsername.announcement;
+        // console.log(this.completed);
         // if (this.$store.getters.user != null){
         //   features.map( (feature) => { if(vote.user._id == this.$store.getters.user._id) {} })
 
