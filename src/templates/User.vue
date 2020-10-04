@@ -104,7 +104,7 @@
     <v-tabs-items v-model="selectedTab">
       <features-list :items="recent" />
       <features-list :items="planned" />
-      <features-list :items="completed" />
+      <completed-list :items="completed" />
     </v-tabs-items>
   </layout>
 </template>
@@ -121,9 +121,10 @@ query ($id: ID!) {
 
 <script>
 import FeaturesList from "@/components/FeaturesList";
+import CompletedList from "@/components/CompletedList";
 import api from "@/ax";
 export default {
-  components: { FeaturesList },
+  components: { FeaturesList, CompletedList },
   data() {
     return {
       selectedTab: null,
@@ -178,7 +179,7 @@ export default {
           _ts
           announcement
           features { data {title _id completed planned
-          description  votes {data {wouldPay like _id user  {_id}}}}}
+          description  votes {data {rating wouldPay like _id user  {_id}}}}}
         }  
           }
         `,
