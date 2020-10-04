@@ -100,37 +100,59 @@
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
         >
-          <v-btn
-            class="ma-1 px-2 d-flex justify-space-around"
-            :outlined="!isVoted(item)"
-            color="blue lighten-2"
-            @click="voteFeature(item, isVoted(item))"
-          >
-            <v-icon class>mdi-arrow-up-drop-circle-outline</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="ma-1 px-2 d-flex justify-space-around"
+                :outlined="!isVoted(item)"
+                color="blue lighten-2"
+                v-bind="attrs"
+                v-on="on"
+                @click="voteFeature(item, isVoted(item))"
+              >
+                <v-icon class>mdi-arrow-up-drop-circle-outline</v-icon>
 
-            <span
-              class="d-inline justify-center font-weight-bold"
-              v-text="item.votes.data.length"
-            ></span>
-          </v-btn>
-
-          <v-btn
-            class="ma-1 px-2 d-flex justify-space-around"
-            outlined
-            color="blue lighten-2"
-            @click="showDetails(item)"
-          >
-            <v-icon>mdi-comment-multiple-outline</v-icon>
-            <!-- <span
+                <span
+                  class="d-inline justify-center font-weight-bold"
+                  v-text="item.votes.data.length"
+                ></span>
+              </v-btn>
+            </template>
+            <span>Upvote</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="ma-1 px-2 d-flex justify-space-around"
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                color="blue lighten-2"
+                @click="showDetails(item)"
+              >
+                <v-icon>mdi-comment-multiple-outline</v-icon>
+                <!-- <span
               class="d-inline justify-center font-weight-bold"
               v-text="item.comments.data.length"
             ></span>-->
-          </v-btn>
+              </v-btn>
+            </template>
+            <span>Add a comment</span>
+          </v-tooltip>
         </v-col>
         <v-col cols="12" sm="10">
-          <v-card-title style="cursor: pointer" @click="showDetails(item)">{{
-            item.title
-          }}</v-card-title>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-card-title
+                v-bind="attrs"
+                v-on="on"
+                style="cursor: pointer"
+                @click="showDetails(item)"
+                >{{ item.title }}</v-card-title
+              >
+            </template>
+            <span>Click for more details</span>
+          </v-tooltip>
           <v-card-text class="hidden-sm-and-down">{{
             item.description
           }}</v-card-text>
