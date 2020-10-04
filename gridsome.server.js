@@ -27,7 +27,7 @@ module.exports = function (api) {
         companyWebsite
         boardCaption
     }  
-      
+
       }
     }
      `
@@ -45,7 +45,10 @@ module.exports = function (api) {
     console.log(data)
     const layouts = actions.addCollection('User')
     // layouts.addReference('layouts', 'Layout')
-    data.data.allUsers.data.forEach(user => {
+    let users = data.data.allUsers.data.filter(user => {
+      return !!user.username
+    })
+    users.forEach(user => {
       layouts.addNode({
         id: user.username,
         companyName: user.companyName,
