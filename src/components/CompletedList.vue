@@ -157,7 +157,7 @@
                   :icon="false"
                   x-large
                   @click.native="voteFeature(item, isVoted(item))"
-                  class="mx-5 pa-5"
+                  class="mx-1"
                   v-bind="attrs"
                   v-on="on"
                 >
