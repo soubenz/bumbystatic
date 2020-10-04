@@ -5,13 +5,12 @@
         <v-row justify="center">{{ this.$page.user.companyName }}</v-row>
       </v-card-title>
       <v-card-text>
-        <!-- <v-row justify="center">
-        <v-col cols="3">-->
         <v-row justify="center">
-          <v-img
+          <p class="text-h5">{{ $page.user.boardCaption }}</p>
+          <!-- <v-img
             src="https://dataimpact.io/wp-content/uploads/2019/04/data-impact-1.png"
             max-width="250"
-          ></v-img>
+          ></v-img> -->
         </v-row>
         <v-row justify="center">
           <v-btn text color="primary" :href="$page.user.companyWebsite"
@@ -115,6 +114,7 @@ query ($id: ID!) {
     announcement
     companyName
     companyWebsite
+    boardCaption
   }
 }
 </page-query>

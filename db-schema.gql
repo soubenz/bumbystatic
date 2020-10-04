@@ -15,6 +15,7 @@ type Feature {
  completed: Boolean
  wouldPay: Boolean
  userID: String!
+ boardCaption: String
 }
 
 type Query {

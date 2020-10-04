@@ -20,11 +20,12 @@ module.exports = function (api) {
 
     let query = `query findAllUser {
       allUsers {
-      data {   _id
+      data {_id
         username
         announcement
         companyName
         companyWebsite
+        boardCaption
     }  
       
       }
@@ -49,7 +50,8 @@ module.exports = function (api) {
         id: user.username,
         companyName: user.companyName,
         companyWebsite: user.companyWebsite,
-        announcement: user.announcement
+        announcement: user.announcement,
+        boardCaption: user.boardCaption
         // id: quote.image.slice(-25, -5),
         //  image: path.resolve(quote.image),
         //  id: quote.text.slice(0, 30),
