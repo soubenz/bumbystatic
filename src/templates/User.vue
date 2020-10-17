@@ -109,6 +109,7 @@
 query ($id: ID!) {
   user(id: $id) {
     id
+    username
     announcement
     companyName
     companyWebsite

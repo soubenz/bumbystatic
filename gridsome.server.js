@@ -50,7 +50,8 @@ module.exports = function (api) {
     })
     users.forEach(user => {
       layouts.addNode({
-        id: user.username,
+        id: user._id,
+        username: user.username,
         companyName: user.companyName,
         companyWebsite: user.companyWebsite,
         announcement: user.announcement,
