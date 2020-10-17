@@ -57,31 +57,32 @@
               >Suggest new Feature</v-card-title
             >
             <v-card-text>
-              <v-text-field
-                v-model="addingItem.title"
-                label="Title"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="addingItem.desc"
-                label="Description"
-                hint="example of helper text only on focus"
-              ></v-text-field>
-              <v-switch
-                v-model="addingItem.wouldPay"
-                class="mx-2"
-                label="Would Pay for this feature"
-              ></v-switch>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="createFeature()"
-                >Suggest</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+                <new-feedback-form
+                  v-model="addingItem.title"
+                  label="Title"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model="addingItem.desc"
+                  label="Description"
+                  hint="example of helper text only on focus"
+                ></v-text-field>
+                <v-switch
+                  v-model="addingItem.wouldPay"
+                  class="mx-2"
+                  label="Would Pay for this feature"
+                ></v-switch> -->
+              </v-card-text>
+              <!-- <v-divider></v-divider> -->
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="createFeature()"
+                  >Suggest</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
       </v-card-text>
     </v-card>
     <v-app-bar dark fixed>
@@ -120,11 +121,12 @@ query ($id: ID!) {
 </page-query>
 
 <script>
+import newFeedbackForm from "@/components/newFeedbackForm";
 import FeaturesList from "@/components/FeaturesList";
 import CompletedList from "@/components/CompletedList";
 import api from "@/ax";
 export default {
-  components: { FeaturesList, CompletedList },
+  components: { FeaturesList, CompletedList, newFeedbackForm },
   data() {
     return {
       selectedTab: null,
