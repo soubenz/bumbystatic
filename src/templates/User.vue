@@ -1,6 +1,6 @@
 <template>
   <layout>
-    <v-card active-class="class" color="pink lighten-5" raised height="200">
+    <v-card active-class="class" color="#F3A738" raised height="200">
       <v-card-title>
         <v-row justify="center">{{ this.$page.user.companyName }}</v-row>
       </v-card-title>
@@ -13,51 +13,48 @@
           ></v-img> -->
         </v-row>
         <v-row justify="center">
-          <v-btn text color="primary" :href="$page.user.companyWebsite"
+          <v-btn text color="#DC7F9B" :href="$page.user.companyWebsite"
             >Company's Website</v-btn
           >
         </v-row>
-        <v-dialog v-model="announcementDialog" width="500">
+        <v-dialog v-model="announcementDialog" width="500" height="400">
           <v-card>
-            <v-card-title class="headline grey lighten-2"
-              >announcement</v-card-title
+            <v-card-title class="text-h5 grey lighten-2"
+              ><v-icon large>mdi-bullhorn-outline</v-icon>
+              Announcement</v-card-title
             >
-            <v-card-text>
-              <!-- <v-btn color="primary" text @click="createFeature()"
-                >Add New</v-btn
-              > -->
-              <span>{{ announcementText }} </span>
-              <!-- <v-text-field v-model="addingItem.title" label="Title" required></v-text-field>
-          <v-text-field
-            v-model="addingItem.desc"
-            label="Description"
-            hint="example of helper text only on focus"
-          ></v-text-field>
-        <v-switch v-model="addingItem.wouldPay" class="mx-2" label="Would Pay for this feature"></v-switch>-->
+            <v-card-text class="mt-4">
+              <span class="text-body-1">{{ announcementText }} </span>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-              <v-btn color="primary" text @click="closeAnnouncement"
+              <v-spacer></v-spacer>
+              <v-btn color="primary" left text @click="closeAnnouncement"
                 >close</v-btn
               >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="addDialog" width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on"
-              >Make Suggestion</v-btn
-            >
-            <p>{{ loggedinUser }}</p>
-            <!-- <p>{{ completed }}</p> -->
-          </template>
-          <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title
-              >Suggest new Feature</v-card-title
-            >
-            <v-card-text>
+        <v-row justify="space-between">
+          <p>{{ loggedinUser }}</p>
+
+          <v-dialog v-model="addDialog" width="500">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="#2F2F2F" dark v-bind="attrs" v-on="on"
+                >Give feedback</v-btn
+              >
+            </template>
+
+            <v-card>
+              <v-card-title class="headline grey lighten-2" primary-title
+                >Suggest new Feature</v-card-title
+              >
+              <v-card-text>
                 <new-feedback-form
+                  :email="loggedinUser"
+                  :inputData.sync="addingItem"
+                />
+                <!-- <v-text-field
                   v-model="addingItem.title"
                   label="Title"
                   required
@@ -92,7 +89,7 @@
         centered
         grow
         class="my-6"
-        background-color="brown"
+        background-color="#2F2F2F"
         active-class="selected-tab"
       >
         <v-tab v-for="tab in tabs" :key="tab.name">
@@ -302,7 +299,7 @@ export default {
   height: 0px;
 }
 .selected-tab {
-  background-color: brown;
+  background-color: #dc7f9b;
 
   /* border-end-end-radius: 25px; */
   /* border-start-start-radius: 60px; */

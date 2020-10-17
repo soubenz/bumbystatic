@@ -70,6 +70,7 @@
             border="top"
             colored-border
             type="info"
+            color="#DC7F9B"
             dense
             v-model="payAlert"
           >
@@ -78,12 +79,20 @@
                 >Would you be prepared to pay for this feature ?</v-col
               >
               <v-col class="shrink">
-                <v-btn @click.stop="votePay(item)">Yes</v-btn>
+                <v-btn
+                  @click.stop="votePay(item)"
+                  class="my-2"
+                  color="#94BFA7"
+                  dark
+                  >Yes</v-btn
+                >
                 <v-btn
                   @click="
                     payAlert = false;
                     item.payAlert = false;
                   "
+                  color="#DC7F9B"
+                  class="my-2"
                   >No</v-btn
                 >
               </v-col>
@@ -105,7 +114,7 @@
               <v-btn
                 class="ma-1 px-2 d-flex justify-space-around"
                 :outlined="!isVoted(item)"
-                color="blue lighten-2"
+                color="#DC7F9B"
                 v-bind="attrs"
                 v-on="on"
                 @click="voteFeature(item, isVoted(item))"
@@ -127,7 +136,7 @@
                 outlined
                 v-bind="attrs"
                 v-on="on"
-                color="blue lighten-2"
+                color="#DC7F9B"
                 @click="showDetails(item)"
               >
                 <v-icon>mdi-comment-multiple-outline</v-icon>
