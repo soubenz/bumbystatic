@@ -3,21 +3,53 @@ text: String!
 user: String!
 feature: Feature
 }
+type Vote {
+ like: Boolean
+ wouldPay: Boolean
+ rating: Float
+ owner: Visitor
+ suggestor: Boolean
+ feature: Feature
 
+}
 type Feature {
- 
  title: String!
- votes: Int!
+ votes: [Vote] @relation
  description: String
  comments: [Comment] @relation
  tags: [String]
  planned: Boolean
  completed: Boolean
  wouldPay: Boolean
- userID: String!
+ opinionsAvg: Float
+ user: User!
+ suggestedBy: Visitor
+}
+type User {
+ uid: String
+ username: String
+ announcement: String
+ companyName: String
+ companyWebsite: String
  boardCaption: String
+ name: String
+ email: String
+ role: String
+ features: [Feature] @relation
+}
+
+type Visitor {
+ name: String
+ email: String
+ suggestions: [Feature] @relation
 }
 
 type Query {
- allFeatures: [Feature!]!
+ allFeatures: [Feature!]
+ allUsers: [User!]
+ allVotes: [Vote!]
+ allVisitors: [Visitor!]
+ usersByUsername(username: String): User
+#  featuresByUser(user: User): [Feature!]
+ featuresByCompletedFlag(completed: Boolean!): [Feature!]
 }
