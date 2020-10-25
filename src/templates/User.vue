@@ -98,10 +98,21 @@
         </v-tab>
       </v-tabs>
     </v-app-bar>
-    <v-tabs-items v-model="selectedTab">
+    <v-tabs-items v-model="selectedTab" v-if="loaded">
       <features-list :items="recent" />
       <features-list :items="planned" />
       <completed-list :items="completed" />
+    </v-tabs-items>
+    <v-tabs-items v-model="selectedTab" v-else>
+      <v-tab-item v-for="i in 3" :key="i">
+        <v-row justify="center">
+          <v-col cols="2"
+            ><v-progress-circular
+              :size="70"
+              indeterminate
+              color="amber"
+            ></v-progress-circular> </v-col></v-row
+      ></v-tab-item>
     </v-tabs-items>
   </layout>
 </template>
@@ -142,6 +153,7 @@ export default {
         { name: "Planned", icon: "mdi-view-agenda-outline" },
         { name: "Completed", icon: "mdi-check" },
       ],
+      loaded: false,
     };
   },
   metaInfo() {},
@@ -205,6 +217,7 @@ export default {
         // features.sort((a, b) => (a._ts > b._ts ? -1 : 1));
         // this.$store.commit("setFeatures", features);
         this.recent = features;
+        this.loaded = true;
       });
       // }
     },
