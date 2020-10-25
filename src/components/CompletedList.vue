@@ -287,8 +287,6 @@ export default {
     },
     votePay(item) {
       api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
         mutation updateVote($id: ID!) {
@@ -309,11 +307,7 @@ export default {
       });
     },
     async removeVote(item) {
-      console.log("removing");
-      console.log(item);
       await api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
        mutation updateVote($vote: ID!) {
@@ -339,11 +333,8 @@ export default {
       let user = this.$store.getters.user;
 
       await api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
-      
       mutation createVote($feature: ID, $user: ID,  $rating: Float) {
         createVote(data: {
         like: true,
@@ -402,8 +393,6 @@ export default {
     },
     async createUser() {
       await api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
       

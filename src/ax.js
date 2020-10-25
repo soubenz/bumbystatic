@@ -9,7 +9,8 @@ api.defaults.paramsSerializer = params => {
 
 api.interceptors.request.use(function (config) {
     config.headers.Authorization = "Basic Zm5BRHRxUnA1MkFDRTBrMzlmWkVTMnR4bXNHZ2JScEVVUGRvZ1d4WjpidW1ieTpzZXJ2ZXI=";
-
+    config.method = "post";
+    config.url = "https://graphql.fauna.com/graphql"
     return config;
 });
 export default api;

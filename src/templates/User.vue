@@ -360,8 +360,6 @@ export default {
     },
     createFeature() {
       api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
         mutation CreateAList {
