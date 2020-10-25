@@ -58,81 +58,83 @@
       Your vote has been saved
       <v-btn color="pink" text @click="snackbarVote = false">Close</v-btn>
     </v-snackbar>
-    <v-row>
-      <v-col cols="12" sm="6" v-for="item in items" :key="item._id">
-        <v-card class="my-6" raised shaped height="250">
-          <v-row>
-            <v-col
-              v-if="item.voted == true && payAlert == true && !!item.payAlert"
-            >
-              <v-alert
-                prominent
-                dismissible
-                border="top"
-                colored-border
-                type="info"
-                dense
-                v-model="payAlert"
+    <template v-if="items.length === 0"> <empty-suggestations /></template>
+    <template v-else>
+      <v-row>
+        <v-col cols="12" sm="6" v-for="item in items" :key="item._id">
+          <v-card class="my-6" raised shaped height="250">
+            <v-row>
+              <v-col
+                v-if="item.voted == true && payAlert == true && !!item.payAlert"
               >
-                <v-row align="center">
-                  <v-col class="grow"
-                    >Would you be prepared to pay for this feature ?</v-col
-                  >
-                  <v-col class="shrink">
-                    <v-btn @click.stop="votePay(item)">Yes</v-btn>
-                    <v-btn
-                      @click="
-                        payAlert = false;
-                        item.payAlert = false;
-                      "
-                      >No</v-btn
+                <v-alert
+                  prominent
+                  dismissible
+                  border="top"
+                  colored-border
+                  type="info"
+                  dense
+                  v-model="payAlert"
+                >
+                  <v-row align="center">
+                    <v-col class="grow"
+                      >Would you be prepared to pay for this feature ?</v-col
                     >
-                  </v-col>
-                </v-row>
-              </v-alert>
-            </v-col>
-          </v-row>
+                    <v-col class="shrink">
+                      <v-btn @click.stop="votePay(item)">Yes</v-btn>
+                      <v-btn
+                        @click="
+                          payAlert = false;
+                          item.payAlert = false;
+                        "
+                        >No</v-btn
+                      >
+                    </v-col>
+                  </v-row>
+                </v-alert>
+              </v-col>
+            </v-row>
 
-          <v-row>
-            <v-col cols="12" sm="10">
-              <v-card-title
-                style="cursor: pointer"
-                @click="showDetails(item)"
-                >{{ item.title }}</v-card-title
-              >
-              <v-card-text class="hidden-sm-and-down">{{
-                item.description
-              }}</v-card-text>
-              <v-card-actions>
-                <v-chip
-                  class="hidden-sm-and-down mx-1"
-                  :color="getTagInfo('planned').color"
-                  v-if="item.planned"
+            <v-row>
+              <v-col cols="12" sm="10">
+                <v-card-title
+                  style="cursor: pointer"
+                  @click="showDetails(item)"
+                  >{{ item.title }}</v-card-title
                 >
-                  <v-icon left>{{ getTagInfo("planned").icon }}</v-icon>
-                  <span class="font-weight-bold">Planned</span>
-                </v-chip>
-                <v-icon
-                  class="d-sm-none mx-1"
-                  :color="getTagInfo('planned').color"
-                  >{{ getTagInfo("planned").icon }}</v-icon
-                >
+                <v-card-text class="hidden-sm-and-down">{{
+                  item.description
+                }}</v-card-text>
+                <v-card-actions>
+                  <v-chip
+                    class="hidden-sm-and-down mx-1"
+                    :color="getTagInfo('planned').color"
+                    v-if="item.planned"
+                  >
+                    <v-icon left>{{ getTagInfo("planned").icon }}</v-icon>
+                    <span class="font-weight-bold">Planned</span>
+                  </v-chip>
+                  <v-icon
+                    class="d-sm-none mx-1"
+                    :color="getTagInfo('planned').color"
+                    >{{ getTagInfo("planned").icon }}</v-icon
+                  >
 
-                <v-chip
-                  class="hidden-sm-and-down mx-1"
-                  :color="getTagInfo('wouldPay').color"
-                  v-if="item.wouldPay"
-                >
-                  <v-icon left>{{ getTagInfo("wouldPay").icon }}</v-icon>
-                  <span class="font-weight-bold">wouldPay</span>
-                </v-chip>
-                <v-icon
-                  class="d-sm-none mx-1"
-                  dark
-                  :color="getTagInfo('wouldPay').color"
-                  >{{ getTagInfo("wouldPay").icon }}</v-icon
-                >
-                <!-- <template v-for="(tag, i) in item.tags">
+                  <v-chip
+                    class="hidden-sm-and-down mx-1"
+                    :color="getTagInfo('wouldPay').color"
+                    v-if="item.wouldPay"
+                  >
+                    <v-icon left>{{ getTagInfo("wouldPay").icon }}</v-icon>
+                    <span class="font-weight-bold">wouldPay</span>
+                  </v-chip>
+                  <v-icon
+                    class="d-sm-none mx-1"
+                    dark
+                    :color="getTagInfo('wouldPay').color"
+                    >{{ getTagInfo("wouldPay").icon }}</v-icon
+                  >
+                  <!-- <template v-for="(tag, i) in item.tags">
                   <v-chip :key="i" class="hidden-sm-and-down mx-1" :color="getTagInfo(tag).color">
                     <v-icon left>{{getTagInfo(tag).icon}}</v-icon>
                     <span class="font-weight-bold">{{tag}}</span>
@@ -143,39 +145,39 @@
                     :color="getTagInfo(tag).color"
                   >{{getTagInfo(tag).icon}}</v-icon>
             </template>-->
-              </v-card-actions>
-            </v-col>
-          </v-row>
-          <v-row dense justify="center">
-            {{ isVoted(item) }}
-            <!-- {{ item }} -->
-            <v-col class="d-flex justify-center ma-1">
-              <v-btn-toggle group tile v-model="item.rating" color="#A02C4F">
-                <v-tooltip bottom v-for="icon in emojis" :key="icon.text">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      transition="fade-transition"
-                      :icon="false"
-                      x-large
-                      @click.native="voteFeature(item, isVoted(item))"
-                      class="mx-1"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-img
-                        class="py-4"
-                        max-height="50"
-                        max-width="50"
-                        :src="icon.img"
-                      />
-                    </v-btn>
-                  </template>
-                  <span>{{ icon.text }}</span>
-                </v-tooltip>
-              </v-btn-toggle>
-            </v-col>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+            <v-row dense justify="center">
+              {{ isVoted(item) }}
+              <!-- {{ item }} -->
+              <v-col class="d-flex justify-center ma-1">
+                <v-btn-toggle group tile v-model="item.rating" color="#A02C4F">
+                  <v-tooltip bottom v-for="icon in emojis" :key="icon.text">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        transition="fade-transition"
+                        :icon="false"
+                        x-large
+                        @click.native="voteFeature(item, isVoted(item))"
+                        class="mx-1"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-img
+                          class="py-4"
+                          max-height="50"
+                          max-width="50"
+                          :src="icon.img"
+                        />
+                      </v-btn>
+                    </template>
+                    <span>{{ icon.text }}</span>
+                  </v-tooltip>
+                </v-btn-toggle>
+              </v-col>
 
-            <!-- <v-col
+              <!-- <v-col
           cols="12"
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
@@ -193,18 +195,20 @@
             <v-icon>mdi-comment-multiple-outline</v-icon>
           </v-btn>
         </v-col>-->
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
   </v-tab-item>
 </template>
 
 <script>
 import detailsDialog from "@/components/detailsDialog";
+import EmptySuggestations from "@/components/EmptySuggestations";
 import api from "@/ax";
 export default {
-  components: { detailsDialog },
+  components: { detailsDialog, EmptySuggestations },
   data() {
     return {
       snackbarVote: false,

@@ -1,6 +1,5 @@
 <template>
   <v-tab-item>
-    <!-- {{features}} -->
     <v-dialog v-model="commentsDialog" width="500">
       <v-card>
         <!-- <v-card-title class="headline grey lighten-2"></v-card-title> -->
@@ -54,147 +53,149 @@
       </v-card>
     </v-dialog>
 
-    <!-- <v-data-iterator :items="items" :items-per-page="10"> -->
-    <!-- <template v-slot:default="{items}"> -->
     <v-snackbar v-model="snackbarVote" rounded="pill" multi-line>
       Your vote has been saved
       <v-btn color="pink" text @click="snackbarVote = false">Close</v-btn>
     </v-snackbar>
-    <v-card v-for="item in items" :key="item._id" class="my-6" raised shaped>
-      {{ item.voted && item.payAlert }}
-      <v-row>
-        <v-col v-if="item.voted == true && payAlert == true && !!item.payAlert">
-          <v-alert
-            prominent
-            dismissible
-            border="top"
-            colored-border
-            type="info"
-            color="#DC7F9B"
-            dense
-            v-model="payAlert"
+    <template v-if="items.length === 0"><empty-suggestations /></template>
+    <template v-else>
+      <v-card v-for="item in items" :key="item._id" class="my-6" raised shaped>
+        {{ item.voted && item.payAlert }}
+        <v-row>
+          <v-col
+            v-if="item.voted == true && payAlert == true && !!item.payAlert"
           >
-            <v-row align="center">
-              <v-col class="grow"
-                >Would you be prepared to pay for this feature ?</v-col
-              >
-              <v-col class="shrink">
-                <v-btn
-                  @click.stop="votePay(item)"
-                  class="my-2"
-                  color="#94BFA7"
-                  dark
-                  >Yes</v-btn
+            <v-alert
+              prominent
+              dismissible
+              border="top"
+              colored-border
+              type="info"
+              color="#DC7F9B"
+              dense
+              v-model="payAlert"
+            >
+              <v-row align="center">
+                <v-col class="grow"
+                  >Would you be prepared to pay for this feature ?</v-col
                 >
+                <v-col class="shrink">
+                  <v-btn
+                    @click.stop="votePay(item)"
+                    class="my-2"
+                    color="#94BFA7"
+                    dark
+                    >Yes</v-btn
+                  >
+                  <v-btn
+                    @click="
+                      payAlert = false;
+                      item.payAlert = false;
+                    "
+                    color="#DC7F9B"
+                    class="my-2"
+                    >No</v-btn
+                  >
+                </v-col>
+              </v-row>
+            </v-alert>
+          </v-col>
+        </v-row>
+
+        {{ isVoted(item) }}
+        {{ item.voteID }}
+        <v-row dense justify="center">
+          <v-col
+            cols="12"
+            sm="1"
+            class="d-flex flex-sm-column justify-sm-center justify-space-around"
+          >
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  @click="
-                    payAlert = false;
-                    item.payAlert = false;
-                  "
+                  class="ma-1 px-2 d-flex justify-space-around"
+                  :outlined="!isVoted(item)"
                   color="#DC7F9B"
-                  class="my-2"
-                  >No</v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="voteFeature(item, isVoted(item))"
                 >
-              </v-col>
-            </v-row>
-          </v-alert>
-        </v-col>
-      </v-row>
+                  <v-icon class>mdi-arrow-up-drop-circle-outline</v-icon>
 
-      {{ isVoted(item) }}
-      {{ item.voteID }}
-      <v-row dense justify="center">
-        <v-col
-          cols="12"
-          sm="1"
-          class="d-flex flex-sm-column justify-sm-center justify-space-around"
-        >
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="ma-1 px-2 d-flex justify-space-around"
-                :outlined="!isVoted(item)"
-                color="#DC7F9B"
-                v-bind="attrs"
-                v-on="on"
-                @click="voteFeature(item, isVoted(item))"
-              >
-                <v-icon class>mdi-arrow-up-drop-circle-outline</v-icon>
-
-                <span
-                  class="d-inline justify-center font-weight-bold"
-                  v-text="item.votes.data.length"
-                ></span>
-              </v-btn>
-            </template>
-            <span>Upvote</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="ma-1 px-2 d-flex justify-space-around"
-                outlined
-                v-bind="attrs"
-                v-on="on"
-                color="#DC7F9B"
-                @click="showDetails(item)"
-              >
-                <v-icon>mdi-comment-multiple-outline</v-icon>
-                <!-- <span
+                  <span
+                    class="d-inline justify-center font-weight-bold"
+                    v-text="item.votes.data.length"
+                  ></span>
+                </v-btn>
+              </template>
+              <span>Upvote</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="ma-1 px-2 d-flex justify-space-around"
+                  outlined
+                  v-bind="attrs"
+                  v-on="on"
+                  color="#DC7F9B"
+                  @click="showDetails(item)"
+                >
+                  <v-icon>mdi-comment-multiple-outline</v-icon>
+                  <!-- <span
               class="d-inline justify-center font-weight-bold"
               v-text="item.comments.data.length"
             ></span>-->
-              </v-btn>
-            </template>
-            <span>Add a comment</span>
-          </v-tooltip>
-        </v-col>
-        <v-col cols="12" sm="10">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-card-title
-                v-bind="attrs"
-                v-on="on"
-                style="cursor: pointer"
-                @click="showDetails(item)"
-                >{{ item.title }}</v-card-title
+                </v-btn>
+              </template>
+              <span>Add a comment</span>
+            </v-tooltip>
+          </v-col>
+          <v-col cols="12" sm="10">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-card-title
+                  v-bind="attrs"
+                  v-on="on"
+                  style="cursor: pointer"
+                  @click="showDetails(item)"
+                  >{{ item.title }}</v-card-title
+                >
+              </template>
+              <span>Click for more details</span>
+            </v-tooltip>
+            <v-card-text class="hidden-sm-and-down">{{
+              item.description
+            }}</v-card-text>
+            <v-card-actions>
+              <v-chip
+                class="hidden-sm-and-down mx-1"
+                :color="getTagInfo('planned').color"
+                v-if="item.planned"
               >
-            </template>
-            <span>Click for more details</span>
-          </v-tooltip>
-          <v-card-text class="hidden-sm-and-down">{{
-            item.description
-          }}</v-card-text>
-          <v-card-actions>
-            <v-chip
-              class="hidden-sm-and-down mx-1"
-              :color="getTagInfo('planned').color"
-              v-if="item.planned"
-            >
-              <v-icon left>{{ getTagInfo("planned").icon }}</v-icon>
-              <span class="font-weight-bold">Planned</span>
-            </v-chip>
-            <v-icon
-              class="d-sm-none mx-1"
-              :color="getTagInfo('planned').color"
-              >{{ getTagInfo("planned").icon }}</v-icon
-            >
+                <v-icon left>{{ getTagInfo("planned").icon }}</v-icon>
+                <span class="font-weight-bold">Planned</span>
+              </v-chip>
+              <v-icon
+                class="d-sm-none mx-1"
+                :color="getTagInfo('planned').color"
+                >{{ getTagInfo("planned").icon }}</v-icon
+              >
 
-            <v-chip
-              class="hidden-sm-and-down mx-1"
-              :color="getTagInfo('wouldPay').color"
-              v-if="item.wouldPay"
-            >
-              <v-icon left>{{ getTagInfo("wouldPay").icon }}</v-icon>
-              <span class="font-weight-bold">wouldPay</span>
-            </v-chip>
-            <v-icon
-              class="d-sm-none mx-1"
-              dark
-              :color="getTagInfo('wouldPay').color"
-              >{{ getTagInfo("wouldPay").icon }}</v-icon
-            >
-            <!-- <template v-for="(tag, i) in item.tags">
+              <v-chip
+                class="hidden-sm-and-down mx-1"
+                :color="getTagInfo('wouldPay').color"
+                v-if="item.wouldPay"
+              >
+                <v-icon left>{{ getTagInfo("wouldPay").icon }}</v-icon>
+                <span class="font-weight-bold">wouldPay</span>
+              </v-chip>
+              <v-icon
+                class="d-sm-none mx-1"
+                dark
+                :color="getTagInfo('wouldPay').color"
+                >{{ getTagInfo("wouldPay").icon }}</v-icon
+              >
+              <!-- <template v-for="(tag, i) in item.tags">
                   <v-chip :key="i" class="hidden-sm-and-down mx-1" :color="getTagInfo(tag).color">
                     <v-icon left>{{getTagInfo(tag).icon}}</v-icon>
                     <span class="font-weight-bold">{{tag}}</span>
@@ -205,9 +206,9 @@
                     :color="getTagInfo(tag).color"
                   >{{getTagInfo(tag).icon}}</v-icon>
             </template>-->
-          </v-card-actions>
-        </v-col>
-        <!-- <v-col
+            </v-card-actions>
+          </v-col>
+          <!-- <v-col
           cols="12"
           sm="1"
           class="d-flex flex-sm-column justify-sm-center justify-space-around"
@@ -225,20 +226,19 @@
             <v-icon>mdi-comment-multiple-outline</v-icon>
           </v-btn>
         </v-col>-->
-      </v-row>
-    </v-card>
-    <!-- </template> -->
-    <!-- </v-data-iterator> -->
-    <!-- <infinite-loading @infinite="infiniteHandler"></infinite-loading> -->
+        </v-row>
+      </v-card>
+    </template>
   </v-tab-item>
 </template>
 
 <script>
 // import InfiniteLoading from "vue-infinite-loading";
 import detailsDialog from "@/components/detailsDialog";
+import EmptySuggestations from "@/components/EmptySuggestations";
 import api from "@/ax";
 export default {
-  components: { detailsDialog },
+  components: { detailsDialog, EmptySuggestations },
   data() {
     return {
       snackbarVote: false,
@@ -251,51 +251,7 @@ export default {
       payAlert: false,
       user: this.$store.getters.user,
       voted: [],
-      //   snackbarVoteDown: false,
-      pending: [
-        {
-          id: 1,
-          text: "Add the ability to embed Kampsite as a widget on a website",
-          tags: [
-            "Popular",
-            // "Enhancement"
-            "Bug",
-            "Would Pay",
-            "Very Important",
-            "Planned",
-          ],
-          desc:
-            "Add the ability on kampsite to add more questions under the 'would you...",
-          comments: [],
-          votes: 12,
-        },
-        {
-          id: 2,
-          text: "Support other languages",
-          tags: [],
-          desc:
-            "Allow users to choose the language the feedback page displays in",
-          comments: [],
-          votes: 5,
-        },
-        {
-          id: 3,
-          text: "Add public Kampsite API",
-          tags: [],
-          desc:
-            "With an API I could build an interface within my app for my users to i...",
-          comments: [],
-          votes: 454,
-        },
-        {
-          id: 4,
-          text: "Bulk delete",
-          tags: [],
-          desc: "Add integration with JIRA",
-          comments: [],
-          votes: 22,
-        },
-      ],
+
       icons: {
         planned: {
           icon: "mdi-view-agenda-outline",
