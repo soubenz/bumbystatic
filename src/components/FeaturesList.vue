@@ -304,7 +304,7 @@ export default {
           }) {
               feature {_id}
                 _id
-            user {_id}
+            owner {_id}
           }
         }
         `,
@@ -367,11 +367,11 @@ export default {
         like: true,
           wouldPay: false,
           feature: {connect :$feature}
-          user: {connect: $user}
+          owner: {connect: $user}
         }) {
             
               _id wouldPay like
-          user {_id email}
+          owner {_id email}
         }
       }
         `,
@@ -394,9 +394,9 @@ export default {
     getUserVote(item) {
       return item.votes.data.filter((vote) => {
         return (
-          vote.user &&
-          (vote.user._id == this.user._id ||
-            vote.user.data._id == this.user._id)
+          vote.owner &&
+          (vote.owner._id == this.owner._id ||
+            vote.owner.data._id == this.user._id)
         );
       });
     },
@@ -405,7 +405,7 @@ export default {
         return false;
       }
       let isVoted = item.votes.data.filter((vote) => {
-        return !!vote.user && vote.user._id == this.$store.getters.user._id;
+        return !!vote.owner && vote.owner._id == this.$store.getters.user._id;
       });
       if (isVoted.length != 0) {
         // console.log(isVoted);
@@ -427,11 +427,11 @@ export default {
         like: true,
           wouldPay: false,
           feature: {connect :$feature}
-          user: {create: {email: $email}}
+          owner: {create: {email: $email}}
         }) {
             
               _id wouldPay like
-          user {_id email}
+          owner {_id email}
         }
       }
         `,
@@ -443,9 +443,9 @@ export default {
       }).then((result) => {
         console.log(result.data);
         this.userLoginDialog = false;
-        let user = result.data.data.createVote.user;
+        let owner = result.data.data.createVote.owner;
         let vote = result.data.data.createVote;
-        this.$store.commit("setUser", user);
+        this.$store.commit("setUser", owner);
         // this.$store.commit("vote", {
         //   item: this.clickedFeature,
         //   status: true,

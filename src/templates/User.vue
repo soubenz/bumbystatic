@@ -139,7 +139,12 @@ export default {
   data() {
     return {
       selectedTab: null,
-      addingItem: { title: "", desc: "", wouldPay: false },
+      addingItem: {
+        title: "",
+        description: "",
+        wouldPay: false,
+        email: "",
+      },
       defaultItem: { title: "", desc: "", wouldPay: false },
       addDialog: false,
       trending: [],
@@ -147,6 +152,13 @@ export default {
       announcementText: "",
       planned: [],
       recent: [],
+      user: {},
+      newFeedback: {
+        title: "",
+        description: "",
+        snackbarText: "Suggestion Added Successfully",
+        wouldPay: "",
+      },
       announcementDialog: false,
       tabs: [
         { name: "Most Recent", icon: "mdi-trending-up" },
@@ -165,6 +177,7 @@ export default {
     await this.getAllFeatures();
     if (!this.$store.getters.announcement) {
       this.announcementDialog = true;
+      // this.addingItem.email = this.$store.getters.user.email;
     }
     // }
   },
@@ -384,16 +397,16 @@ export default {
   },
   computed: {
     loggedinUser() {
-      const user = this.$store.getters.user;
-      if (user != null) {
-        if (!!user.email) {
+      this.user = this.$store.getters.user;
+      if (this.user != null) {
+        if (!!this.user.email) {
           return user.email;
         } else {
-          return true;
+          return "Logged annonymsly";
         }
       }
       // console.log(this.$store.getters);
-      return false;
+      return "";
       // if (this.$store.getters.user != null) {
       //   if (this.$store.getters.user.email == "") {
       //     return "anonymous";
