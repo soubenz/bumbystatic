@@ -73,7 +73,7 @@
               <!-- <v-divider></v-divider> -->
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="createFeature()"
+                <v-btn color="primary" text @click="addFeedback()"
                   >Suggest</v-btn
                 >
               </v-card-actions>
@@ -174,6 +174,132 @@ export default {
       this.announcementDialog = false;
       this.$store.commit("setAnnouncement", true);
     },
+    async createFeedbackWithUser(feature) {
+      let query = `
+        mutation createFeature($title: String!, $pageOwner:ID ,
+            $wouldPay:Boolean, $desc: String, $email: String) {
+          createFeature(
+            data: {
+              title: $title
+              description: $desc
+              votes: {
+                create: {
+                  wouldPay: $wouldPay
+                  like: true
+                  suggestor: true
+                  owner: { create: {email: $email} }
+              } }
+              user:  { connect: $pageOwner } 
+            })
+             {
+            _id
+            title
+            description
+            votes {data {like owner {_id email} } }
+          }
+        }
+      `;
+      api({
+        url: "https://graphql.fauna.com/graphql",
+        method: "post",
+        data: {
+          query: query,
+          variables: {
+            title: feature.title,
+            desc: feature.description,
+            wouldPay: feature.wouldPay,
+            email: feature.email,
+            pageOwner: this.$page.user.id,
+          },
+        },
+      }).then((result) => {
+        // this.newFeedback.title = "";
+        // this.newFeedback.description = "";
+        let results = result.data.data.createFeature;
+        // let votes = results.votes;
+        let user = votes.data[0].owner;
+
+        this.$store.commit("setUser", user);
+        this.recent.push(results);
+        this.recent.sort((a, b) => (a._ts > b._ts ? -1 : 1));
+        this.addingItem = this.defaultItem;
+      });
+    },
+    async addFeedbackForUser(feature, user) {
+      let query = `
+        mutation createFeature($title: String!, $wouldPay: Boolean, 
+        $desc: String, $owner: ID,$pageOwner: ID) {
+          createFeature(
+            data: {
+              title: $title
+              description: $desc
+              suggestedBy: { connect: $owner }
+              votes: {
+                create: {
+                  wouldPay: $wouldPay
+                  like: true
+                  owner: { connect: $owner }
+                }
+              }
+              user: { connect: $pageOwner }
+            }
+          ) {
+            _id
+            title
+            description
+            votes {data {like owner {_id email} } }
+          }
+        }
+      `;
+      api({
+        data: {
+          query: query,
+          variables: {
+            title: feature.title,
+            desc: feature.description,
+            wouldPay: feature.wouldPay,
+            pageOwner: this.$page.user.id,
+            owner: user._id,
+          },
+        },
+      }).then((result) => {
+        let results = result.data.data.createFeature;
+        let votes = results.votes;
+
+        // this.$store.commit("setUser", user);
+        this.recent.push(results);
+        this.recent.sort((a, b) => (a._ts > b._ts ? -1 : 1));
+        this.addingItem = this.defaultItem;
+
+        // this.$store.commit("setFeatures", features);
+        // this.snackbar.text = this.newFeedback.snackbarText;
+        // this.snackbar.show = true;
+        // this.$router.push("/feedbacks");
+      });
+    },
+    async addFeedback() {
+      // let user = this.$store.getters.user;
+      if (this.user == null) {
+        await this.createFeedbackWithUser(this.addingItem);
+
+        // let query = `
+        // mutation createFeature ($title: String!, $desc: String
+        //  , $votes: Int!, $user: ID){
+        // createFeature(data: {title: $title, description: $desc,
+        //  votes: $votes, user: {connect: $user} }) {
+        //     _id
+
+        //   }
+        //      }
+        // `;
+        // this.clickedFeature = item;
+        // return;
+      } else {
+        this.addFeedbackForUser(this.addingItem, this.user);
+      }
+      // return;
+      // this.addVote(item);
+    },
     async getAllFeatures() {
       // console.log(this.$store.getters.features.length);
       // if (this.$store.getters.features.length != 0) {
@@ -181,17 +307,15 @@ export default {
       // } else {
       // console.log("from api");
       await api({
-        url: "https://graphql.fauna.com/graphql",
-        method: "post",
         data: {
           query: `
        query findUser {
-          usersByUsername(username: "${this.$page.user.id}") {
+          usersByUsername(username: "${this.$page.user.username}") {
           _id
           _ts
           announcement
           features { data {title _id completed planned
-          description  votes {data {rating wouldPay like _id user  {_id}}}}}
+          description  votes {data {rating wouldPay like _id owner  {_id}}}}}
         }  
           }
         `,
