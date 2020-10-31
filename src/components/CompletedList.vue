@@ -1,6 +1,5 @@
 <template>
   <v-tab-item>
-    <!-- {{features}} -->
     <v-dialog v-model="commentsDialog" width="500">
       <v-card>
         <!-- <v-card-title class="headline grey lighten-2"></v-card-title> -->
@@ -150,7 +149,7 @@
             </v-row>
             <v-row dense justify="center">
               {{ isVoted(item) }}
-              <!-- {{ item }} -->
+
               <v-col class="d-flex justify-center ma-1">
                 <v-btn-toggle group tile v-model="item.rating" color="#A02C4F">
                   <v-tooltip bottom v-for="icon in emojis" :key="icon.text">
