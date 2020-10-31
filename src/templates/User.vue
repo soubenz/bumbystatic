@@ -90,7 +90,7 @@
         background-color="secondary"
         active-class="selected-tab"
       >
-        <v-tab v-for="tab in tabs" :key="tab.name">
+        <v-tab style="min-width: 0px" v-for="tab in tabs" :key="tab.name">
           <span class="hidden-sm-and-down">{{ tab.name }}</span>
           <v-icon class="d-sm-none">{{ tab.icon }}</v-icon>
         </v-tab>
