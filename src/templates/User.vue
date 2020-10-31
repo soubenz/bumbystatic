@@ -98,7 +98,7 @@
     </v-app-bar>
     <v-tabs-items v-model="selectedTab" v-if="loaded">
       <features-list :items="recent" />
-      <features-list :items="planned" />
+      <!-- <features-list :items="planned" /> -->
       <completed-list :items="completed" />
     </v-tabs-items>
     <v-tabs-items v-model="selectedTab" v-else>
@@ -160,7 +160,7 @@ export default {
       announcementDialog: false,
       tabs: [
         { name: "Most Recent", icon: "mdi-trending-up" },
-        { name: "Planned", icon: "mdi-view-agenda-outline" },
+        // { name: "Planned", icon: "mdi-view-agenda-outline" },
         { name: "Completed", icon: "mdi-check" },
       ],
       loaded: false,
