@@ -396,7 +396,7 @@ export default {
       this.user = this.$store.getters.user;
       if (this.user != null) {
         if (!!this.user.email) {
-          return user.email;
+          return this.user.email;
         } else {
           return "Logged annonymsly";
         }
