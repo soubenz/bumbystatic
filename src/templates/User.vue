@@ -17,6 +17,23 @@
             >Company's Website</v-btn
           >
         </v-row>
+        <v-dialog v-model="addDialog" width="500">
+          <v-card>
+            <v-card-title class="headline primary" primary-title
+              >Suggest new Feature</v-card-title
+            >
+            <v-card-text>
+              <new-feedback-form
+                :email="loggedinUser"
+                :inputData.sync="addingItem"
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="addFeedback()">Suggest</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="announcementDialog" width="500" height="400">
           <v-card>
             <v-card-title class="text-h5 grey lighten-2"
@@ -35,57 +52,17 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-row justify="space-between">
-          <p>{{ loggedinUser }}</p>
-
-          <v-dialog v-model="addDialog" width="500">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="#2F2F2F" dark v-bind="attrs" v-on="on"
-                >Give feedback</v-btn
-              >
-            </template>
-
-            <v-card>
-              <v-card-title class="headline grey lighten-2" primary-title
-                >Suggest new Feature</v-card-title
-              >
-              <v-card-text>
-                <new-feedback-form
-                  :email="loggedinUser"
-                  :inputData.sync="addingItem"
-                />
-                <!-- <v-text-field
-                  v-model="addingItem.title"
-                  label="Title"
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="addingItem.desc"
-                  label="Description"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
-                <v-switch
-                  v-model="addingItem.wouldPay"
-                  class="mx-2"
-                  label="Would Pay for this feature"
-                ></v-switch> -->
-              </v-card-text>
-              <!-- <v-divider></v-divider> -->
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="addFeedback()"
-                  >Suggest</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-row>
       </v-card-text>
     </v-card>
-    <v-app-bar dark fixed>
+    <v-app-bar flat color="secondary" fixed>
+      <!-- <v-row dense> -->
+      <!-- <v-col cols="10"> -->
       <v-tabs
         v-model="selectedTab"
         dark
+        grow
+        icons-with-text
+        hide-slider
         centered
         background-color="secondary"
         active-class="selected-tab"
@@ -95,7 +72,57 @@
           <v-icon class="d-sm-none">{{ tab.icon }}</v-icon>
         </v-tab>
       </v-tabs>
+
+      <!-- <v-tooltip bottom open-on-click :open-on-hover="false">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon icon v-bind="attrs" v-on="on" color="grey lighten-1">
+            mdi-cart
+          </v-icon>
+        </template>
+        <span>Programmatic tooltip</span>
+      </v-tooltip> -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            class="mr-1"
+            large
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
+            <span class="hidden-sm-and-down">User Info</span>
+            <v-icon class="d-sm-none">mdi-account-box-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>{{ loggedinUser }} </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <!-- <v-tooltip bottom v-model="showUserTooltip">
+        <v-btn large>
+          <span class="hidden-sm-and-down">User Info</span>
+          <v-icon class="d-sm-none"> mdi-account-box-outline</v-icon>
+        </v-btn>
+        <span>{{ loggedinUser }}</span>
+      </v-tooltip> -->
+
+      <v-btn large color="accent" @click="addDialog = true">
+        <span class="hidden-sm-and-down">Give Feedback</span>
+        <v-icon class="d-sm-none"> mdi-plus-circle-outline</v-icon></v-btn
+      >
+      <!-- </v-col> -->
+      <!-- <v-col cols="1">
+        </v-col>
+        <v-col cols="1">
+        
+        </v-col> -->
+      <!-- </v-row> -->
     </v-app-bar>
+    {{ selectedTab }}
+
     <v-tabs-items v-model="selectedTab" v-if="loaded">
       <features-list :items="recent" />
       <!-- <features-list :items="planned" /> -->
@@ -137,6 +164,7 @@ export default {
   data() {
     return {
       selectedTab: null,
+      showUserTooltip: false,
       addingItem: {
         title: "",
         description: "",
