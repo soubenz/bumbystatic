@@ -41,6 +41,7 @@ export default function (Vue, {
     icons: {
       iconfont: 'mdi',
     },
+    theme: { themes: { light: {primary: "#F3A738", secondary: "#2F2F2F", accent: "#DC7F9B"}}}
   }
   // Set default layout as a global component
   Vue.component('Layout', DefaultLayout)
