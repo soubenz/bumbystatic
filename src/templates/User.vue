@@ -1,6 +1,6 @@
 <template>
   <layout>
-    <v-card active-class="class" color="#F3A738" raised height="200">
+    <v-card active-class="class" color="primary" raised height="200">
       <v-card-title>
         <v-row justify="center">{{ this.$page.user.companyName }}</v-row>
       </v-card-title>
@@ -13,7 +13,7 @@
           ></v-img> -->
         </v-row>
         <v-row justify="center">
-          <v-btn text color="#DC7F9B" :href="$page.user.companyWebsite"
+          <v-btn text color="primary" :href="$page.user.companyWebsite"
             >Company's Website</v-btn
           >
         </v-row>
@@ -87,9 +87,7 @@
         v-model="selectedTab"
         dark
         centered
-        grow
-        class="my-6"
-        background-color="#2F2F2F"
+        background-color="secondary"
         active-class="selected-tab"
       >
         <v-tab v-for="tab in tabs" :key="tab.name">

@@ -71,7 +71,7 @@
               border="top"
               colored-border
               type="info"
-              color="#DC7F9B"
+              color="accent"
               dense
               v-model="payAlert"
             >
@@ -92,7 +92,7 @@
                       payAlert = false;
                       item.payAlert = false;
                     "
-                    color="#DC7F9B"
+                    color="accent"
                     class="my-2"
                     >No</v-btn
                   >
@@ -115,7 +115,7 @@
                 <v-btn
                   class="ma-1 px-2 d-flex justify-space-around"
                   :outlined="!isVoted(item)"
-                  color="#DC7F9B"
+                  color="accent"
                   v-bind="attrs"
                   v-on="on"
                   @click="voteFeature(item, isVoted(item))"
@@ -137,7 +137,7 @@
                   outlined
                   v-bind="attrs"
                   v-on="on"
-                  color="#DC7F9B"
+                  color="accent"
                   @click="showDetails(item)"
                 >
                   <v-icon>mdi-comment-multiple-outline</v-icon>
