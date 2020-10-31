@@ -36,7 +36,7 @@
         </v-dialog>
         <v-dialog v-model="announcementDialog" width="500" height="400">
           <v-card>
-            <v-card-title class="text-h5 grey lighten-2"
+            <v-card-title class="text-h5 primary"
               ><v-icon large>mdi-bullhorn-outline</v-icon>
               Announcement</v-card-title
             >
