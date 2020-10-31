@@ -137,6 +137,7 @@
                   outlined
                   v-bind="attrs"
                   v-on="on"
+                  disabled
                   color="accent"
                   @click="showDetails(item)"
                 >
